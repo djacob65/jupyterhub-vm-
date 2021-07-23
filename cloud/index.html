@@ -409,7 +409,7 @@ ostack image show $IMAGE_NAME
 
 <p>You can also specify the file containing the commands to be executed after the first boot. Here this file is necessary (<em>user-data-jupystack.txt</em>) because we must overwrite the file <em>/usr/local/bin/get-hostname</em> giving the complete name of the instance on openstack in order to build the root URL of the jupyterhub application.</p>
 <p>In our example, we choose a flavor corresponding to 8 CPUs, 16GB of RAM and 20GB of disk.</p>
-<p>An SSH key has been created with the name genostack in the openstack dashboard. This <a href="http://www.genouest.org/outils/genostack/ssh-config.html" target="_blank">SSH key</a> must be a valid key on your (linux) openstack.genouest.org account(file <em>~/.ssh/authorized_keys</em>).</p>
+<p>An SSH key has been created with the name <em>genostack</em> in the openstack dashboard. This <a href="http://www.genouest.org/outils/genostack/ssh-config.html" target="_blank">SSH key</a> must be a valid key on your (linux) openstack.genouest.org account(file <em>~/.ssh/authorized_keys</em>).</p>
 <div class="highlight"><pre><span></span><code>IMAGE_NAME=jupyterhub-image
 SERVER_NAME=jupystack
 KEYPAIR=genostack
@@ -429,7 +429,7 @@ onova boot --flavor $FLAVORID --image $IMAGEID --security-groups default \
 ostack server show $SERVER_NAME
 </code></pre></div>
 
-<p>The last command is used to obtain the IP number of the VM thus created. Let's suppose that this IP number is <em>198.168.101.179</em>.  You can then access the application from your web browser at the URL: <em><a href="https://app-192-168-101-79.vm.openstack.genouest.org/hub/login">https://app-192-168-101-79.vm.openstack.genouest.org/hub/login</a></em></p>
+<p>The last command is used to obtain the IP number of the VM thus created. Let's suppose that this IP number is <em>192.168.101.129</em>.  You can then access the application from your web browser at the URL: <em><a href="https://app-192-168-101-129.vm.openstack.genouest.org/hub/login">https://app-192-168-101-129.vm.openstack.genouest.org/hub/login</a></em></p>
 <p><br>
 <center>
 <a href="../images/image5.png" data-lightbox="image5"><img src="../images/image5.png" width="600px"></a>
