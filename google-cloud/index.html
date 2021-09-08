@@ -588,11 +588,14 @@ STATUS: RUNNING
 <ul>
 <li>Remove previous ssh keys for this IP in the known_hosts file</li>
 </ul>
-<div class="highlight"><pre><span></span><code>grep -E -v <span class="s2">&quot;^</span><span class="nv">$IP</span><span class="s2">&quot;</span> ~/.ssh/known_hosts &gt; ~/.ssh/known_hosts.tmp
+<p><div class="highlight"><pre><span></span><code>grep -E -v <span class="s2">&quot;^</span><span class="nv">$IP</span><span class="s2">&quot;</span> ~/.ssh/known_hosts &gt; ~/.ssh/known_hosts.tmp
 cat ~/.ssh/known_hosts.tmp &gt; ~/.ssh/known_hosts
 ssh -o <span class="s1">&#39;StrictHostKeyChecking no&#39;</span> root@<span class="nv">$IP</span> <span class="s2">&quot;hostname&quot;</span>
 </code></pre></div>
-
+* Output generated
+<div class="highlight"><pre><span></span><code>Warning: Permanently added &#39;35.187.120.148&#39; (ED25519) to the list of known hosts.
+jupyterhub-vm
+</code></pre></div></p>
 <p><br></p>
 <ul>
 <li>Customization : Fixe the issue concerning the external IP address </li>
@@ -615,6 +618,12 @@ ssh -o <span class="s1">&#39;StrictHostKeyChecking no&#39;</span> root@<span cla
 <center>
 <a href="../gcpimg/img4.png" data-lightbox="image4"><img src="../gcpimg/img4.png" width="600px"></a>
 </center><br><br></p>
+<hr />
+<ul>
+<li><a href="../gcpimg/google-cloud-GAEV-en.pdf" target="_blank">Supplementary document</a>: Slides that show step-by-step presentation on how to proceed from Google Cloud Console.</li>
+</ul>
+<hr />
+<p><br></p>
                 
               
               
