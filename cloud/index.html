@@ -15,7 +15,7 @@
         <meta name="author" content="Daniel Jacob">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1, mkdocs-material-5.2.2">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-5.2.2">
     
     
       
@@ -206,14 +206,14 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Using the final VM on an Openstack cloud
+        Using the Final VM on an Openstack cloud
         <span class="md-nav__icon md-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
         </span>
       </label>
     
-    <a href="./" title="Using the final VM on an Openstack cloud" class="md-nav__link md-nav__link--active">
-      Using the final VM on an Openstack cloud
+    <a href="./" title="Using the Final VM on an Openstack cloud" class="md-nav__link md-nav__link--active">
+      Using the Final VM on an Openstack cloud
     </a>
     
       
@@ -261,6 +261,18 @@
   
 </nav>
     
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../google-cloud/" title="Using the Final VM on Google Cloud Platform" class="md-nav__link">
+      Using the Final VM on Google Cloud Platform
+    </a>
   </li>
 
     
@@ -331,7 +343,7 @@
                   
                 
                 
-                  <h1>Using the final VM on an Openstack cloud</h1>
+                  <h1>Using the Final VM on an Openstack cloud</h1>
                 
                 <p><a href="https://www.genouest.org/" target="_blank">GenOuest</a> is a national bioinformatics platform federated by the <a href="https://www.france-bioinformatique.fr/" target="_blank">French Institute of Bioinformatics</a> (IFB). This platform offers cloud services for the French public research community. Any researcher from this community can make a request to Genouest or any other IFB platform to have access to the proposed services.</p>
 <p>GenOuest offers on its datacenter infrastructure a service of providing computing resources in the form of virtual machines. The infrastructure is managed using <a href="https://www.openstack.org/" target="_blank">Openstack</a>, which is a set of open source software that allows the deployment of cloud computing infrastructures (Infrastructure as a Service, IaS). It is therefore necessary to have a valid account on this infrastructure (see the <a href="https://help.genouest.org/" target="_blank">online help</a>).</p>
@@ -407,7 +419,7 @@ ostack image show $IMAGE_NAME
 <div class="highlight"><pre><span></span><code>ostack keypair list
 </code></pre></div>
 
-<p>You can also specify the file containing the commands to be executed after the first boot. Here this file is necessary (<em>user-data-jupystack.txt</em>) because we must overwrite the file <em>/usr/local/bin/get-hostname</em> giving the complete name of the instance on openstack in order to build the root URL of the jupyterhub application.</p>
+<p>You can also specify the file containing the commands to be executed after the first boot. Here this file is necessary (<em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/openstack/user-data-jupystack.txt" target="_blank">user-data-jupystack.txt</a></em>) because we must overwrite the file <em>/usr/local/bin/get-hostname</em> giving the complete name of the instance on openstack in order to build the root URL of the jupyterhub application (cf <em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/ansible/roles/jupyterhub/files/bin/jupyterhub.pre" target="_blank">jupyterhub.pre</a></em> and <em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/ansible/roles/jupyterhub/files/systemd/jupyterhub.service" target="_blank">jupyterhub.service</a></em>).</p>
 <p>In our example, we choose a flavor corresponding to 8 CPUs, 16GB of RAM and 20GB of disk.</p>
 <p>An SSH key has been created with the name <em>genostack</em> in the openstack dashboard. This <a href="http://www.genouest.org/outils/genostack/ssh-config.html" target="_blank">SSH key</a> must be a valid key on your (linux) openstack.genouest.org account(file <em>~/.ssh/authorized_keys</em>).</p>
 <div class="highlight"><pre><span></span><code>IMAGE_NAME=jupyterhub-image
@@ -471,6 +483,20 @@ ostack server show $SERVER_NAME
             </div>
           </a>
         
+        
+          <a href="../google-cloud/" title="Using the Final VM on Google Cloud Platform" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Using the Final VM on Google Cloud Platform
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
         
       </nav>
     </div>

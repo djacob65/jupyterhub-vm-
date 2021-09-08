@@ -1,0 +1,693 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Building automation of a virtual machine (VM) from a server install image of ubuntu (ISO file)">
+      
+      
+      
+        <meta name="author" content="Daniel Jacob">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.2, mkdocs-material-5.2.2">
+    
+    
+      
+        <title>Using the Final VM on Google Cloud Platform - Using JupyterHub within a VM and on the Cloud</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.b8fb47b5.min.css">
+      
+      
+    
+    
+    
+    <script src="../js/jquery-2.1.1.min.js"></script>
+
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+      <link rel="stylesheet" href="../css/pdfextra.css">
+    
+      <link rel="stylesheet" href="../css/lightbox.css">
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-google-cloud-sdk" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href=".." title="Using JupyterHub within a VM and on the Cloud" class="md-header-nav__button md-logo" aria-label="Using JupyterHub within a VM and on the Cloud">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Using JupyterHub within a VM and on the Cloud
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Using the Final VM on Google Cloud Platform
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Using JupyterHub within a VM and on the Cloud" class="md-nav__button md-logo" aria-label="Using JupyterHub within a VM and on the Cloud">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Using JupyterHub within a VM and on the Cloud
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Purpose" class="md-nav__link">
+      Purpose
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../basebox/" title="Building the Base VM" class="md-nav__link">
+      Building the Base VM
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../finalvm/" title="Building the Final VM" class="md-nav__link">
+      Building the Final VM
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../cloud/" title="Using the Final VM on an Openstack cloud" class="md-nav__link">
+      Using the Final VM on an Openstack cloud
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Using the Final VM on Google Cloud Platform
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Using the Final VM on Google Cloud Platform" class="md-nav__link md-nav__link--active">
+      Using the Final VM on Google Cloud Platform
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-google-cloud-sdk" class="md-nav__link">
+    Using Google Cloud SDK
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Google Cloud SDK">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before-you-begin" class="md-nav__link">
+    Before you begin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-overview" class="md-nav__link">
+    Quick overview
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-image-from-the-vm-final-box" class="md-nav__link">
+    Create an image from the VM final box
+  </a>
+  
+    <nav class="md-nav" aria-label="Create an image from the VM final box">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparation" class="md-nav__link">
+    Preparation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-the-vmdk-file" class="md-nav__link">
+    Import the VMDK File
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-instance-based-on-an-imported-image" class="md-nav__link">
+    Create an instance based on an imported image
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#using-google-cloud-sdk" class="md-nav__link">
+    Using Google Cloud SDK
+  </a>
+  
+    <nav class="md-nav" aria-label="Using Google Cloud SDK">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before-you-begin" class="md-nav__link">
+    Before you begin
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-overview" class="md-nav__link">
+    Quick overview
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-image-from-the-vm-final-box" class="md-nav__link">
+    Create an image from the VM final box
+  </a>
+  
+    <nav class="md-nav" aria-label="Create an image from the VM final box">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preparation" class="md-nav__link">
+    Preparation
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-the-vmdk-file" class="md-nav__link">
+    Import the VMDK File
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-instance-based-on-an-imported-image" class="md-nav__link">
+    Create an instance based on an imported image
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                  <h1>Using the Final VM on Google Cloud Platform</h1>
+                
+                <h3 id="using-google-cloud-sdk">Using Google Cloud SDK<a class="headerlink" href="#using-google-cloud-sdk" title="Permanent link">&para;</a></h3>
+<p><br></p>
+<h4 id="before-you-begin">Before you begin<a class="headerlink" href="#before-you-begin" title="Permanent link">&para;</a></h4>
+<p>In order to use the final VM on GCP, you first need to go through the following steps:</p>
+<ul>
+<li>Assuming <a href="https://cloud.google.com/resource-manager/docs/creating-managing-projects" target="_blank">your project is created</a> (GCP), </li>
+<li>Assuming your <a href="https://cloud.google.com/compute/docs/instances/adding-removing-ssh-keys" target="_blank">SSH Keys defined at the level project</a> (GCP)</li>
+<li>Assuming your SSH keys are available (added with <a href="https://www.ssh.com/academy/ssh/add" target="_blank">ssh-add</a>, a ssh-agent  running),</li>
+<li>Assuming the Google Cloud SDK installed on your machine (See <a href="https://cloud.google.com/sdk/docs/install" target="_blank">How to install Google Cloud SDK</a>)</li>
+</ul>
+<p><br></p>
+<h4 id="quick-overview">Quick overview<a class="headerlink" href="#quick-overview" title="Permanent link">&para;</a></h4>
+<p>We start from the VM final box and will then proceed in two steps:</p>
+<ol>
+<li>Upload the final box VM file (vmdk) to Cloud Storage and convert it to an image</li>
+<li>Create an instance of this image</li>
+</ol>
+<p><br>
+<center>
+<a href="../gcpimg/img0.png" data-lightbox="image0"><img src="../gcpimg/img0.png" width="600px"></a>
+</center><br><br></p>
+<h3 id="create-an-image-from-the-vm-final-box">Create an image from the VM final box<a class="headerlink" href="#create-an-image-from-the-vm-final-box" title="Permanent link">&para;</a></h3>
+<h4 id="preparation">Preparation<a class="headerlink" href="#preparation" title="Permanent link">&para;</a></h4>
+<p>A number of variables need to be defined in order to set up the process correctly. The values indicated correspond to the test performed. Some of them must therefore be adapted to your context (OS, resources).</p>
+<p><br></p>
+<ul>
+<li>Define the full path to the google-cloud utility to simplify further commands. </li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="nv">GCLOUD</span><span class="o">=</span>/cygdrive/c/_Tools/gcloud/google-cloud-sdk/bin/gcloud
+</code></pre></div>
+<br></p>
+<ul>
+<li>Initialization of variables concerning the project. You must adapt these values based on your own project</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">PROJECT</span><span class="o">=</span>test-gaev-20210906
+<span class="nv">ZONE</span><span class="o">=</span>europe-west1-b
+</code></pre></div>
+
+<p><br></p>
+<ul>
+<li>Initialization of variables concerning the VM. The path (VDISK_DIR) and the name of the vmdk file (VMDK_FILE) must be changed according to your case. The type of virtual machines (VM_MACHINE) can also be adapted according to your needs (see <a href="https://cloud.google.com/compute/docs/machine-types" target="_blank">machine families</a>)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">IMAGE</span><span class="o">=</span>jupyterhub-img
+<span class="nv">VM</span><span class="o">=</span>jupyterhub-vm
+<span class="nv">VDISK_DIR</span><span class="o">=</span>/cygdrive/c/VirtualMach/Vagrant/jupyterhub/builds/vm
+<span class="nv">VMDK_FILE</span><span class="o">=</span>box-disk001.vmdk
+<span class="nv">VM_OS</span><span class="o">=</span>ubuntu-1804
+<span class="nv">VM_MACHINE</span><span class="o">=</span>c2-standard-4
+</code></pre></div>
+
+<p><br></p>
+<ul>
+<li>Set the project by default</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span> <span class="nv">CLOUDSDK_CORE_PROJECT</span><span class="o">=</span><span class="nv">$PROJECT</span>
+</code></pre></div>
+
+<p><br></p>
+<ul>
+<li>Get the project number</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">PROJECT_NUMBER</span><span class="o">=</span><span class="k">$(</span>GCLOUD iam service-accounts list <span class="p">|</span> grep EMAIL <span class="p">|</span> cut -d<span class="s1">&#39;:&#39;</span> -f2 <span class="p">|</span> cut -d<span class="s1">&#39;-&#39;</span> -f1 <span class="p">|</span> sed -e <span class="s2">&quot;s/ //g&quot;</span> <span class="p">|</span> tr -d <span class="s2">&quot;[\n\r]&quot;</span><span class="k">)</span>
+</code></pre></div>
+
+<p><br></p>
+<ul>
+<li>Set the  Identity and Access Management (<a href="https://cloud.google.com/storage/docs/access-control/iam" target="_blank">IAM</a>) permissions. (See <a href="https://cloud.google.com/compute/docs/access" target="_blank">Access control overview</a> and <a href="https://cloud.google.com/iam/docs/service-accounts" target="_blank">Service accounts</a> for more details)</li>
+</ul>
+<p><div class="highlight"><pre><span></span><code><span class="nv">$GCLOUD</span> services <span class="nb">enable</span> cloudbuild.googleapis.com
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">$GCLOUD</span> projects add-iam-policy-binding <span class="nv">$PROJECT</span> <span class="se">\</span>
+   --member serviceAccount:<span class="nv">$PROJECT_NUMBER</span>@cloudbuild.gserviceaccount.com <span class="se">\</span>
+   --role roles/compute.admin
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">$GCLOUD</span> projects add-iam-policy-binding <span class="nv">$PROJECT</span> <span class="se">\</span>
+   --member serviceAccount:<span class="nv">$PROJECT_NUMBER</span>@cloudbuild.gserviceaccount.com <span class="se">\</span>
+   --role roles/iam.serviceAccountUser
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nv">$GCLOUD</span> projects add-iam-policy-binding <span class="nv">$PROJECT</span> <span class="se">\</span>
+   --member serviceAccount:<span class="nv">$PROJECT_NUMBER</span>@cloudbuild.gserviceaccount.com <span class="se">\</span>
+   --role roles/iam.serviceAccountTokenCreator
+</code></pre></div></p>
+<p><br></p>
+<h4 id="import-the-vmdk-file">Import the VMDK File<a class="headerlink" href="#import-the-vmdk-file" title="Permanent link">&para;</a></h4>
+<ul>
+<li>Uses batch Windows command instead of cygwin bash. Indeed Python been an <a href="https://www.anaconda.com/products/individual-d" target="_blank">Anaconda</a> tool for Windows, 
+it does not correctly deal with files based on cygwin pathways, even if the pathway is simply the 
+file name. Very strange! With this tip, it works. Perhaps we should have used the module for Anaconda instead (see <a href="https://anaconda.org/conda-forge/google-cloud-sdk" target="_blank">google-cloud-sdk for Anaconda</a>).</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="o">(</span>
+<span class="nb">cd</span> <span class="nv">$VDISK_DIR</span>
+
+<span class="nb">echo</span> <span class="s2">&quot;@ECHO OFF</span>
+<span class="s2">CLS</span>
+<span class="s2">SET PATH=C:\_Tools\gcloud\google-cloud-sdk\bin;%PATH%;</span>
+<span class="s2">gcloud compute images import </span><span class="nv">$IMAGE</span><span class="s2"> --zone </span><span class="nv">$ZONE</span><span class="s2"> --no-guest-environment --source-file </span><span class="nv">$VMDK_FILE</span><span class="s2"> --os </span><span class="nv">$VM_OS</span><span class="s2"> </span>
+<span class="s2">exit /b 0</span>
+<span class="s2">&quot;</span> &gt; /tmp/cmd.bat
+chmod +x /tmp/cmd.bat
+/tmp/cmd.bat
+<span class="o">)</span>
+</code></pre></div>
+
+<ul>
+<li>Output generated
+<div class="highlight"><pre><span></span><code>Copying [box-disk001.vmdk] to [gs://test-gaev-20210906-daisy-bkt/tmpimage/5044ee90-6a16-43dd-9eff-789bf333c82c-box-disk001.vmdk]...
+..............................................................................................done.
+WARNING: Importing image. This may take up to 2 hours.
+Created [https://cloudbuild.googleapis.com/v1/projects/test-gaev-20210906/builds/c1a34fc5-d8d7-4804-be22-58508bef1f82].
+Logs are available at [https://console.cloud.google.com/cloud-build/builds/c1a34fc5-d8d7-4804-be22-58508bef1f82?project=188926165780].
+starting build &quot;c1a34fc5-d8d7-4804-be22-58508bef1f82&quot;
+[import-image]: 2021-09-07T14:30:25Z Creating Google Compute Engine disk from gs://test-gaev-20210906-daisy-bkt/tmpimage/5044ee90-6a16-43dd-9eff-789bf333c82c-box-disk001.vmdk
+[import-image]: 2021-09-07T14:38:23Z Finished creating Google Compute Engine disk
+[import-image]: 2021-09-07T14:38:23Z Inspecting disk for OS and bootloader
+[import-image]: 2021-09-07T14:40:17Z Inspection result=os_release:{cli_formatted:&quot;ubuntu-1804&quot; distro:&quot;ubuntu&quot; major_version:&quot;18&quot; minor_version:&quot;04&quot; architecture:X64 distro_id:UBUNTU} elapsed_time_ms:114577 os_count:1
+[import-image]: 2021-09-07T14:40:17Z Cloud Build ID:
+[import-image]: 2021-09-07T14:40:35Z Making disk bootable on Google Compute Engine
+</code></pre></div></li>
+</ul>
+<p><br>
+<center>
+<a href="../gcpimg/img1.png" data-lightbox="image1"><img src="../gcpimg/img1.png" width="600px"></a>
+</center><center><font size="-1">Checking in the GCP console</font></center><br><br></p>
+<ul>
+<li>List the images linked to the project</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">$GCLOUD</span> compute images list <span class="p">|</span> grep -B1 -A3 <span class="nv">$PROJECT</span>
+</code></pre></div>
+
+<ul>
+<li>Output generated
+<div class="highlight"><pre><span></span><code>NAME: jupyterhub-img
+PROJECT: test-gaev-20210906
+FAMILY:
+DEPRECATED:
+STATUS: READY
+</code></pre></div></li>
+</ul>
+<p><br>
+<center>
+<a href="../gcpimg/img2.png" data-lightbox="image2"><img src="../gcpimg/img2.png" width="600px"></a>
+</center><center><font size="-1">Checking in the GCP console</font></center><br><br></p>
+<h3 id="create-an-instance-based-on-an-imported-image">Create an instance based on an imported image<a class="headerlink" href="#create-an-instance-based-on-an-imported-image" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Launch the VM instance creation.  The type of virtual machines (VM_MACHINE) can be adapted according to your needs (see <a href="https://cloud.google.com/compute/docs/machine-types" target="_blank">machine families</a>)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">$GCLOUD</span> compute instances create <span class="nv">$VM</span> --image-project <span class="nv">$PROJECT</span> --image <span class="nv">$IMAGE</span> <span class="se">\</span>
+       --tags<span class="o">=</span>http-server,https-server --zone<span class="o">=</span><span class="nv">$ZONE</span> --machine-type <span class="nv">$VM_MACHINE</span>
+</code></pre></div>
+
+<ul>
+<li>Output generated
+<div class="highlight"><pre><span></span><code>Created [https://www.googleapis.com/compute/v1/projects/test-gaev-20210906/zones/europe-west1-b/instances/jupyterhub-vm].
+NAME: jupyterhub-vm
+ZONE: europe-west1-b
+MACHINE_TYPE: c2-standard-4
+PREEMPTIBLE:
+INTERNAL_IP: 10.132.0.25
+EXTERNAL_IP: 35.187.120.148
+STATUS: RUNNING
+</code></pre></div></li>
+</ul>
+<p><br>
+<center>
+<a href="../gcpimg/img3.png" data-lightbox="image3"><img src="../gcpimg/img3.png" width="600px"></a>
+</center><center><font size="-1">Checking in the GCP console</font></center><br><br></p>
+<ul>
+<li>Get the IP address of the instance</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nv">IP</span><span class="o">=</span><span class="k">$(</span><span class="nv">$GCLOUD</span> compute instances describe <span class="nv">$VM</span> <span class="se">\</span>
+   --format<span class="o">=</span><span class="s1">&#39;get(networkInterfaces[0].accessConfigs[0].natIP)&#39;</span> <span class="p">|</span> tr -d <span class="s2">&quot;\n&quot;</span> <span class="p">|</span> tr -d <span class="s2">&quot;\r&quot;</span><span class="k">)</span>
+</code></pre></div>
+
+<p><br></p>
+<ul>
+<li>Remove previous ssh keys for this IP in the known_hosts file</li>
+</ul>
+<div class="highlight"><pre><span></span><code>grep -E -v <span class="s2">&quot;^</span><span class="nv">$IP</span><span class="s2">&quot;</span> ~/.ssh/known_hosts &gt; ~/.ssh/known_hosts.tmp
+cat ~/.ssh/known_hosts.tmp &gt; ~/.ssh/known_hosts
+ssh -o <span class="s1">&#39;StrictHostKeyChecking no&#39;</span> root@<span class="nv">$IP</span> <span class="s2">&quot;hostname&quot;</span>
+</code></pre></div>
+
+<p><br></p>
+<ul>
+<li>Customization : Fixe the issue concerning the external IP address </li>
+</ul>
+<p>Because the IP address found by default is the internal one we need the external IP address. So we have to modify the get-hostname script for that.</p>
+<div class="highlight"><pre><span></span><code>ssh root@<span class="nv">$IP</span> <span class="s2">&quot;echo \&quot;echo </span><span class="nv">$IP</span><span class="s2">\&quot; &gt; /usr/local/bin/get-hostname&quot;</span>
+</code></pre></div>
+
+<ul>
+<li>Then reboot the VM</li>
+</ul>
+<div class="highlight"><pre><span></span><code>ssh root@<span class="nv">$IP</span> <span class="s2">&quot;reboot&quot;</span>
+</code></pre></div>
+
+<p><br></p>
+<ul>
+<li>Launch Jupyterhub in your web browser</li>
+</ul>
+<p><br>
+<center>
+<a href="../gcpimg/img4.png" data-lightbox="image4"><img src="../gcpimg/img4.png" width="600px"></a>
+</center><br><br></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../cloud/" title="Using the Final VM on an Openstack cloud" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Using the Final VM on an Openstack cloud
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+          <div class="md-footer-copyright__highlight">
+            Daniel Jacob, INRAE, 2021
+          </div>
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/vendor.de50e36d.min.js"></script>
+      <script src="../assets/javascripts/bundle.ff925e8b.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "..",
+          features: [],
+          search: Object.assign({
+            worker: "../assets/javascripts/worker/search.27c6a5e6.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="../js/lightbox.min.js"></script>
+      
+        <script src="../js/mermaid.min.js"></script>
+      
+    
+  </body>
+</html>
