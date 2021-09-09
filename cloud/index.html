@@ -440,11 +440,12 @@ onova boot --flavor <span class="nv">$FLAVORID</span> --image <span class="nv">$
            --key-name <span class="nv">$KEYPAIR</span>  <span class="nv">$SERVER_NAME</span>
 </code></pre></div>
 
-<p>Once launched, the construction of the VM instance is underway. </p>
+<p>Once launched, the construction of the VM instance is underway, and its status is "building". So you have to wait until the VM status is "Running" (~ one minute or more).</p>
+<p>To see the status, launch the command below :</p>
 <div class="highlight"><pre><span></span><code>ostack server show <span class="nv">$SERVER_NAME</span>
 </code></pre></div>
 
-<p>The last command is used to obtain the IP number of the VM thus created. At launch, the status is "building". You have to wait until the VM status is "Running" (~ one minute or more). So you should rereun this last command</p>
+<p>You should probably rereun this last command</p>
 <p>Finally you should obtained something like below:</p>
 <div class="highlight"><pre><span></span><code>+-----------------------------+------------------------------------------------------------------+
 | Field                       | Value                                                            |
@@ -479,7 +480,7 @@ onova boot --flavor <span class="nv">$FLAVORID</span> --image <span class="nv">$
 </code></pre></div>
 
 <p><br></p>
-<p>The IP addresse is given by the field 'addresses'. Let's suppose that this IP number is <em>192.168.101.79</em>.  You can then access the application from your web browser at the URL: <em><a href="https://app-192-168-101-79.vm.openstack.genouest.org/hub/login">https://app-192-168-101-79.vm.openstack.genouest.org/hub/login</a></em></p>
+<p>The last command is also used to obtain the IP number of the VM thus created. The IP addresse is given by the field 'addresses'. Let's suppose that this IP number is <em>192.168.101.79</em>.  You can then access the application from your web browser at the URL: <em><a href="https://app-192-168-101-79.vm.openstack.genouest.org/hub/login">https://app-192-168-101-79.vm.openstack.genouest.org/hub/login</a></em></p>
 <p><br>
 <center>
 <a href="../images/image5.png" data-lightbox="image5"><img src="../images/image5.png" width="600px"></a>
