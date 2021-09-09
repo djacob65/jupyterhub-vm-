@@ -390,6 +390,7 @@ Please enter your OpenStack Password <span class="k">for</span> project &lt;Proj
  | m2.2xlarge | 32768 |   20 |     4 | True      |
  +------------+-------+------+-------+-----------+
 </code></pre></div></p>
+<p><br></p>
 <p>We will then proceed in two steps:</p>
 <ol>
 <li>create a VM image within the library</li>
@@ -401,7 +402,7 @@ Please enter your OpenStack Password <span class="k">for</span> project &lt;Proj
 </center><br><br></p>
 <h4 id="creating-the-image-on-the-openstack-infrastructure">Creating the image on the openstack infrastructure<a class="headerlink" href="#creating-the-image-on-the-openstack-infrastructure" title="Permanent link">&para;</a></h4>
 <p>It is first necessary to extract the VM file in VMDK format from the archive generated in the previous step.</p>
-<div class="highlight"><pre><span></span><code>$&gt; tar xvzf ubuntu-box.tar.gz box-disk001.vmdk
+<div class="highlight"><pre><span></span><code>$&gt; tar xvzf &lt;path of the archive file&gt;/ubuntu-box.tar.gz box-disk001.vmdk
 </code></pre></div>
 
 <p>This is the file that will be used to create the image. You must also specify a name for the image.  </p>
