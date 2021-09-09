@@ -348,6 +348,7 @@
                 <p><a href="https://www.genouest.org/" target="_blank">GenOuest</a> is a national bioinformatics platform federated by the <a href="https://www.france-bioinformatique.fr/" target="_blank">French Institute of Bioinformatics</a> (IFB). This platform offers cloud services for the French public research community. Any researcher from this community can make a request to Genouest or any other IFB platform to have access to the proposed services.</p>
 <p>GenOuest offers on its datacenter infrastructure a service of providing computing resources in the form of virtual machines. The infrastructure is managed using <a href="https://www.openstack.org/" target="_blank">Openstack</a>, which is a set of open source software that allows the deployment of cloud computing infrastructures (Infrastructure as a Service, IaS). It is therefore necessary to have a valid account on this infrastructure (see the <a href="https://help.genouest.org/" target="_blank">online help</a>).</p>
 <p>It is then assumed that you have installed Python (≥2.7) as well as the <a href="https://docs.openstack.org/newton/user-guide/common/cli-install-openstack-command-line-clients.html" target="_blank">package python-openstackclient</a> . </p>
+<p><br></p>
 <h4 id="retrieving-its-connection-settings-from-genouest-openstack">Retrieving its connection settings from GenOuest Openstack<a class="headerlink" href="#retrieving-its-connection-settings-from-genouest-openstack" title="Permanent link">&para;</a></h4>
 <p>To set the required environment variables for openstack command line clients, you must download the environment file called openrc.sh from the <a href="https://www.youtube.com/embed/XcQYz--CNiM?ab_channel=UKCloudLtd" target="_blank">GenOuest openStack dashboard</a> as a user. This project-specific environment file contains the credentials that all openstack services use.</p>
 <p><br>
@@ -355,6 +356,7 @@
 <a href="../images/image3.png" data-lightbox="image3"><img src="../images/image3.png" width="600px"></a>
 </center><br><br></p>
 <p><strong>Note</strong>: All the scripts and other configuration files mentioned in this description can be found in free access under the <a href="https://github.com/inrae/jupyterhub-vm/tree/master/openstack" target="_blank">GiHub INRAE repository</a>.</p>
+<p><br></p>
 <p>You need to get the <em>openrc.sh</em> script as well as the <em>cloud.yml</em> configuration file. The latter is to be put in the <em>&lt;home directory>/.config/openstack</em> directory.</p>
 <p>Then run the <em>openrc.sh</em> script in the current shell (i.e invoking using a dot); you will be asked for your password.</p>
 <div class="highlight"><pre><span></span><code>$&gt; . ./openrc.sh
@@ -364,7 +366,7 @@ Please enter your OpenStack Password <span class="k">for</span> project &lt;Proj
 <ul>
 <li><em>&lt;Project></em> and <em>&lt;User></em> corresponding to your configuration.</li>
 </ul>
-<p>This script will define the following variables: OS_AUTH_URL, OS_PROJECT_DOMAIN_ID, OS_REGION_NAME, OS_PROJECT_NAME, OS_USER_DOMAIN_NAME, OS_IDENTITY_API_VERSION, OS_INTERFACE, OS_USERNAME, OS_PROJECT_ID,OS_PASSWORD</p>
+<p>This script will define the following variables: OS_AUTH_URL, OS_PROJECT_DOMAIN_ID, OS_REGION_NAME, OS_PROJECT_NAME, OS_USER_DOMAIN_NAME, OS_IDENTITY_API_VERSION, OS_INTERFACE, OS_USERNAME, OS_PROJECT_ID, OS_PASSWORD</p>
 <p>In addition, in order to simplify the written of commands, we will define some aliases.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">OS_SCRIPTS</span><span class="o">=</span>&lt;path of the python-openstackclient scripts&gt;
 
@@ -372,6 +374,7 @@ Please enter your OpenStack Password <span class="k">for</span> project &lt;Proj
 <span class="nb">alias</span> <span class="nv">onova</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OS_SCRIPTS</span><span class="s2">/nova --os-password </span><span class="nv">$OS_PASSWORD</span><span class="s2">&quot;</span>
 </code></pre></div>
 
+<p><br></p>
 <p>If everything is configured correctly, the following command should provide you with a list of available flavors. Flavours define the hardware configuration available for a server. It defines the size of a virtual server that can be started.</p>
 <p><div class="highlight"><pre><span></span><code>$&gt; ostack flavor list
 </code></pre></div>
@@ -402,28 +405,63 @@ Please enter your OpenStack Password <span class="k">for</span> project &lt;Proj
 </center><br><br></p>
 <h4 id="creating-the-image-on-the-openstack-infrastructure">Creating the image on the openstack infrastructure<a class="headerlink" href="#creating-the-image-on-the-openstack-infrastructure" title="Permanent link">&para;</a></h4>
 <p>It is first necessary to extract the VM file in VMDK format from the archive generated in the previous step.</p>
-<div class="highlight"><pre><span></span><code>$&gt; tar xvzf &lt;path of the archive file&gt;/ubuntu-box.tar.gz box-disk001.vmdk
+<p><div class="highlight"><pre><span></span><code>$&gt; tar xvzf &lt;path of the archive file&gt;/ubuntu-box.tar.gz box-disk001.vmdk
 </code></pre></div>
-
-<p>This is the file that will be used to create the image. You must also specify a name for the image.  </p>
+This is the file that will be used to create the image. You must also specify a name for the image. </p>
+<p>Then the command below will create the image from the VM file. This command can take several minutes to be achieved.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">IMAGE_NAME</span><span class="o">=</span>jupyterhub-image
 
 ostack image create --disk-format vmdk --file box-disk001.vmdk <span class="nv">$IMAGE_NAME</span>
 
-ostack image <span class="nb">set</span> <span class="nv">$IMAGE_NAME</span>
+ostack image <span class="nb">set</span> --property <span class="nv">description</span><span class="o">=</span><span class="s1">&#39;JupyterHub with R and Python&#39;</span> <span class="nv">$IMAGE_NAME</span>
 
 ostack image show <span class="nv">$IMAGE_NAME</span>
 </code></pre></div>
 
+<p>As a result you should obtained something like below:
+<div class="highlight"><pre><span></span><code>+------------------+----------------------------------------------------------+
+| Field            | Value                                                    |
++------------------+----------------------------------------------------------+
+| checksum         | 2a8e9789322009839401be1c25b3d977                         |
+| container_format | bare                                                     |
+| created_at       | 2021-09-09T06:49:14Z                                     |
+| disk_format      | vmdk                                                     |
+| file             | /v2/images/d88e2d16-9c67-4f07-a5dd-20d68f80ba0f/file     |
+| id               | d88e2d16-9c67-4f07-a5dd-20d68f80ba0f                     |
+| min_disk         | 0                                                        |
+| min_ram          | 0                                                        |
+| name             | jupyterhub-img                                           |
+| owner            | xxxxxxxxxxxxxxxxxxxxxxxxxx                               |
+| properties       | description=&#39;JupyterHub with R and Python&#39;               |
+| protected        | False                                                    |
+| schema           | /v2/schemas/image                                        |
+| size             | 3666548736                                               |
+| status           | active                                                   |
+| tags             |                                                          |
+| updated_at       | 2021-09-09T07:02:16Z                                     |
+| visibility       | shared                                                   |
++------------------+----------------------------------------------------------+
+</code></pre></div></p>
+<p><br></p>
 <h4 id="creating-an-instance-from-the-created-image">Creating an instance from the created image<a class="headerlink" href="#creating-an-instance-from-the-created-image" title="Permanent link">&para;</a></h4>
 <p>From the created image, it is now possible to create an instance. You have to specify the name of the instance, its flavor (see above) and the SSH key associated to this VM. The SSH key (keypair) must first have been created from the openstack dashboard.</p>
-<p>You can list the SSH keys with the command:</p>
+<ul>
+<li>
+<p>You can list the SSH keys with the command:
 <div class="highlight"><pre><span></span><code>ostack keypair list
-</code></pre></div>
-
-<p>You can also specify the file containing the commands to be executed after the first boot. Here this file is necessary (<em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/openstack/user-data-jupystack.txt" target="_blank">user-data-jupystack.txt</a></em>) because we must overwrite the file <em>/usr/local/bin/get-hostname</em> giving the complete name of the instance on openstack in order to build the root URL of the jupyterhub application (cf <em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/ansible/roles/jupyterhub/files/bin/jupyterhub.pre" target="_blank">jupyterhub.pre</a></em> and <em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/ansible/roles/jupyterhub/files/systemd/jupyterhub.service" target="_blank">jupyterhub.service</a></em>).</p>
-<p>In our example, we choose a flavor corresponding to 8 CPUs, 16GB of RAM and 20GB of disk.</p>
+</code></pre></div></p>
+</li>
+<li>
 <p>An SSH key has been created with the name <em>genostack</em> in the openstack dashboard. This <a href="http://www.genouest.org/outils/genostack/ssh-config.html" target="_blank">SSH key</a> must be a valid key on your (linux) openstack.genouest.org account(file <em>~/.ssh/authorized_keys</em>).</p>
+</li>
+<li>
+<p>For flavor we choose in our example the one corresponding to 8 CPUs, 16GB of RAM and 20GB of disk.</p>
+</li>
+<li>
+<p>You can also specify the file containing the commands to be executed after the first boot. Here this file is necessary (<em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/openstack/user-data-jupystack.txt" target="_blank">user-data-jupystack.txt</a></em>) because we must overwrite the file <em>/usr/local/bin/get-hostname</em> giving the complete name of the instance on openstack in order to build the root URL of the jupyterhub application (cf <em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/ansible/roles/jupyterhub/files/bin/jupyterhub.pre" target="_blank">jupyterhub.pre</a></em> and <em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/ansible/roles/jupyterhub/files/systemd/jupyterhub.service" target="_blank">jupyterhub.service</a></em>).</p>
+</li>
+</ul>
+<p><br></p>
 <p>Now, we are ready to launch the command to create the VM isntance.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">IMAGE_NAME</span><span class="o">=</span>jupyterhub-image
 <span class="nv">SERVER_NAME</span><span class="o">=</span>jupystack
@@ -449,36 +487,36 @@ onova boot --flavor <span class="nv">$FLAVORID</span> --image <span class="nv">$
 
 <p>You should probably rereun this last command</p>
 <p>Finally you should obtained something like below:</p>
-<div class="highlight"><pre><span></span><code>+-----------------------------+------------------------------------------------------------------+
-| Field                       | Value                                                            |
-+-----------------------------+------------------------------------------------------------------+
-| OS-DCF:diskConfig           | MANUAL                                                           |
-| OS-EXT-AZ:availability_zone | nova                                                             |
-| OS-EXT-STS:power_state      | Running                                                          |
-| OS-EXT-STS:task_state       | None                                                             |
-| OS-EXT-STS:vm_state         | active                                                           |
-| OS-SRV-USG:launched_at      | 2021-09-09T07:09:49.000000                                       |
-| OS-SRV-USG:terminated_at    | None                                                             |
-| accessIPv4                  |                                                                  |
-| accessIPv6                  |                                                                  |
-| addresses                   | genouest-ext=192.168.101.79                                      |
-| config_drive                | True                                                             |
-| created                     | 2021-09-09T07:08:05Z                                             |
-| flavor                      | m1.xlarge (c781b97e-f891-4ddf-9a6b-0e5ae4ef3eb1)                 |
-| hostId                      | 126a5d6324eb3765547b4d2e3c5743509afde064a7d90ff1db2fb58a         |
-| id                          | 0146be96-0c4f-413b-b3a5-bde37cdabb26                             |
-| image                       | jupyterhub-image (d88e2d16-9c67-4f07-a5dd-20d68f80ba0f)          |
-| key_name                    | genostack                                                        |
-| name                        | jupystack                                                        |
-| progress                    | 0                                                                |
-| project_id                  | xxxxxxxxxxxxxxxxxxxxxxxxx                                        |
-| properties                  |                                                                  |
-| security_groups             | name=&#39;default&#39;                                                   |
-| status                      | ACTIVE                                                           |
-| updated                     | 2021-09-09T07:09:49Z                                             |
-| user_id                     | xxxxxxxxxxxxxxxxxxxxxxxxx                                        |
-| volumes_attached            |                                                                  |
-+-----------------------------+------------------------------------------------------------------+
+<div class="highlight"><pre><span></span><code>+-----------------------------+---------------------------------------------------------+
+| Field                       | Value                                                   |
++-----------------------------+---------------------------------------------------------+
+| OS-DCF:diskConfig           | MANUAL                                                  |
+| OS-EXT-AZ:availability_zone | nova                                                    |
+| OS-EXT-STS:power_state      | Running                                                 |
+| OS-EXT-STS:task_state       | None                                                    |
+| OS-EXT-STS:vm_state         | active                                                  |
+| OS-SRV-USG:launched_at      | 2021-09-09T07:09:49.000000                              |
+| OS-SRV-USG:terminated_at    | None                                                    |
+| accessIPv4                  |                                                         |
+| accessIPv6                  |                                                         |
+| addresses                   | genouest-ext=192.168.101.79                             |
+| config_drive                | True                                                    |
+| created                     | 2021-09-09T07:08:05Z                                    |
+| flavor                      | m1.xlarge (c781b97e-f891-4ddf-9a6b-0e5ae4ef3eb1)        |
+| hostId                      | 126a5d6324eb3765547b4d2e3c5743509afde064a7d90ff1db2fb58a|
+| id                          | 0146be96-0c4f-413b-b3a5-bde37cdabb26                    |
+| image                       | jupyterhub-image (d88e2d16-9c67-4f07-a5dd-20d68f80ba0f) |
+| key_name                    | genostack                                               |
+| name                        | jupystack                                               |
+| progress                    | 0                                                       |
+| project_id                  | xxxxxxxxxxxxxxxxxxxxxxxxx                               |
+| properties                  |                                                         |
+| security_groups             | name=&#39;default&#39;                                          |
+| status                      | ACTIVE                                                  |
+| updated                     | 2021-09-09T07:09:49Z                                    |
+| user_id                     | xxxxxxxxxxxxxxxxxxxxxxxxx                               |
+| volumes_attached            |                                                         |
++-----------------------------+---------------------------------------------------------+
 </code></pre></div>
 
 <p><br></p>
@@ -489,6 +527,11 @@ onova boot --flavor <span class="nv">$FLAVORID</span> --image <span class="nv">$
 </center><br><br></p>
 <h3 id="acknowledgements">Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permanent link">&para;</a></h3>
 <p>We would like to thank the <a href="https://www.genouest.org/2017/03/02/cluster/" target="_blank">IFB GenOuest bioinformatics</a> for providing storage and computing resources on its national life science Cloud.</p>
+<hr />
+<ul>
+<li><a href="../gcpimg/PuTTY_WinSCP.pdf" target="_blank">Additional document</a>: Slides that show, step by step, how to copy data, scripts and notebooks in a secure way (SCP) on the shared folder of the Jupyterhub server.</li>
+</ul>
+<hr />
 <p><br><br><br></p>
                 
                   
