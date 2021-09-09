@@ -356,7 +356,7 @@
 </center><br><br></p>
 <p><strong>Note</strong>: All the scripts and other configuration files mentioned in this description can be found in free access under the <a href="https://github.com/inrae/jupyterhub-vm/tree/master/openstack" target="_blank">GiHub INRAE repository</a>.</p>
 <p>You need to get the <em>openrc.sh</em> script as well as the <em>cloud.yml</em> configuration file. The latter is to be put in the <em>&lt;home directory>/.config/openstack</em> directory.</p>
-<p>Then run the <em>openrc.sh</em> script in the current shell (i.e invoking using a dot); you will be asked for your password:</p>
+<p>Then run the <em>openrc.sh</em> script in the current shell (i.e invoking using a dot); you will be asked for your password.</p>
 <div class="highlight"><pre><span></span><code>$&gt; . ./openrc.sh
 Please enter your OpenStack Password <span class="k">for</span> project &lt;Project&gt; as user &lt;Users&gt;:
 </code></pre></div>
@@ -364,7 +364,8 @@ Please enter your OpenStack Password <span class="k">for</span> project &lt;Proj
 <ul>
 <li><em>&lt;Project></em> and <em>&lt;User></em> corresponding to your configuration.</li>
 </ul>
-<p>We will define some aliases to simplify the following commands:</p>
+<p>This script will define the following variables: OS_AUTH_URL, OS_PROJECT_DOMAIN_ID, OS_REGION_NAME, OS_PROJECT_NAME, OS_USER_DOMAIN_NAME, OS_IDENTITY_API_VERSION, OS_INTERFACE, OS_USERNAME, OS_PROJECT_ID,OS_PASSWORD</p>
+<p>In addition, in order to simplify the written of commands, we will define some aliases.</p>
 <div class="highlight"><pre><span></span><code><span class="nv">OS_SCRIPTS</span><span class="o">=</span>&lt;path of the python-openstackclient scripts&gt;
 
 <span class="nb">alias</span> <span class="nv">ostack</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OS_SCRIPTS</span><span class="s2">/openstack --os-cloud=openstack --os-password </span><span class="nv">$OS_PASSWORD</span><span class="s2">&quot;</span>
