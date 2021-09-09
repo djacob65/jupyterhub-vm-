@@ -358,17 +358,17 @@
 <p>You need to get the <em>openrc.sh</em> script as well as the <em>cloud.yml</em> configuration file. The latter is to be put in the <em>&lt;home directory>/.config/openstack</em> directory.</p>
 <p>Then run the <em>openrc.sh</em> script in the current shell (i.e invoking using a dot); you will be asked for your password:</p>
 <div class="highlight"><pre><span></span><code>$&gt; . ./openrc.sh
-Please enter your OpenStack Password for project &lt;Project&gt; as user &lt;Users&gt;:
+Please enter your OpenStack Password <span class="k">for</span> project &lt;Project&gt; as user &lt;Users&gt;:
 </code></pre></div>
 
 <ul>
 <li><em>&lt;Project></em> and <em>&lt;User></em> corresponding to your configuration.</li>
 </ul>
 <p>We will define some aliases to simplify the following commands:</p>
-<div class="highlight"><pre><span></span><code>OS_SCRIPTS=&lt;path of the python-openstackclient scripts&gt;
+<div class="highlight"><pre><span></span><code><span class="nv">OS_SCRIPTS</span><span class="o">=</span>&lt;path of the python-openstackclient scripts&gt;
 
-alias ostack=&quot;$OS_SCRIPTS/openstack --os-cloud=openstack --os-password $OS_PASSWORD&quot;
-alias onova=&quot;$OS_SCRIPTS/nova --os-password $OS_PASSWORD&quot;
+<span class="nb">alias</span> <span class="nv">ostack</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OS_SCRIPTS</span><span class="s2">/openstack --os-cloud=openstack --os-password </span><span class="nv">$OS_PASSWORD</span><span class="s2">&quot;</span>
+<span class="nb">alias</span> <span class="nv">onova</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$OS_SCRIPTS</span><span class="s2">/nova --os-password </span><span class="nv">$OS_PASSWORD</span><span class="s2">&quot;</span>
 </code></pre></div>
 
 <p>If everything is configured correctly, the following command should provide you with a list of available flavors. Flavours define the hardware configuration available for a server. It defines the size of a virtual server that can be started.</p>
@@ -404,13 +404,13 @@ alias onova=&quot;$OS_SCRIPTS/nova --os-password $OS_PASSWORD&quot;
 </code></pre></div>
 
 <p>This is the file that will be used to create the image. You must also specify a name for the image.  </p>
-<div class="highlight"><pre><span></span><code>IMAGE_NAME=jupyterhub-image
+<div class="highlight"><pre><span></span><code><span class="nv">IMAGE_NAME</span><span class="o">=</span>jupyterhub-image
 
-ostack image create --disk-format vmdk --file box-disk001.vmdk $IMAGE_NAME
+ostack image create --disk-format vmdk --file box-disk001.vmdk <span class="nv">$IMAGE_NAME</span>
 
-ostack image set $IMAGE_NAME
+ostack image <span class="nb">set</span> <span class="nv">$IMAGE_NAME</span>
 
-ostack image show $IMAGE_NAME
+ostack image show <span class="nv">$IMAGE_NAME</span>
 </code></pre></div>
 
 <h4 id="creating-an-instance-from-the-created-image">Creating an instance from the created image<a class="headerlink" href="#creating-an-instance-from-the-created-image" title="Permanent link">&para;</a></h4>
@@ -422,26 +422,64 @@ ostack image show $IMAGE_NAME
 <p>You can also specify the file containing the commands to be executed after the first boot. Here this file is necessary (<em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/openstack/user-data-jupystack.txt" target="_blank">user-data-jupystack.txt</a></em>) because we must overwrite the file <em>/usr/local/bin/get-hostname</em> giving the complete name of the instance on openstack in order to build the root URL of the jupyterhub application (cf <em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/ansible/roles/jupyterhub/files/bin/jupyterhub.pre" target="_blank">jupyterhub.pre</a></em> and <em><a href="https://github.com/inrae/jupyterhub-vm/blob/master/ansible/roles/jupyterhub/files/systemd/jupyterhub.service" target="_blank">jupyterhub.service</a></em>).</p>
 <p>In our example, we choose a flavor corresponding to 8 CPUs, 16GB of RAM and 20GB of disk.</p>
 <p>An SSH key has been created with the name <em>genostack</em> in the openstack dashboard. This <a href="http://www.genouest.org/outils/genostack/ssh-config.html" target="_blank">SSH key</a> must be a valid key on your (linux) openstack.genouest.org account(file <em>~/.ssh/authorized_keys</em>).</p>
-<div class="highlight"><pre><span></span><code>IMAGE_NAME=jupyterhub-image
-SERVER_NAME=jupystack
-KEYPAIR=genostack
-FLAVOR_NAME=m1.xlarge
+<p>Now, we are ready to launch the command to create the VM isntance.</p>
+<div class="highlight"><pre><span></span><code><span class="nv">IMAGE_NAME</span><span class="o">=</span>jupyterhub-image
+<span class="nv">SERVER_NAME</span><span class="o">=</span>jupystack
+<span class="nv">KEYPAIR</span><span class="o">=</span>genostack
+<span class="nv">FLAVOR_NAME</span><span class="o">=</span>m1.xlarge
 
-IMAGEID=$(ostack image show $IMAGE_NAME | \
-           grep &quot;| id &quot; | cut -d&#39;|&#39; -f3 | \ 
-           sed -e &quot;s/ //g&quot;)
-FLAVORID=$(ostack flavor list | \
-           grep &quot;$FLAVOR_NAME&quot;  | cut -d&#39;|&#39; -f2 | \
-           sed -e &quot;s/ //g&quot;)
+<span class="nv">IMAGEID</span><span class="o">=</span><span class="k">$(</span>ostack image show <span class="nv">$IMAGE_NAME</span> <span class="p">|</span> <span class="se">\</span>
+           grep <span class="s2">&quot;| id &quot;</span> <span class="p">|</span> cut -d<span class="s1">&#39;|&#39;</span> -f3 <span class="p">|</span> <span class="se">\ </span>
+           sed -e <span class="s2">&quot;s/ //g&quot;</span><span class="k">)</span>
+<span class="nv">FLAVORID</span><span class="o">=</span><span class="k">$(</span>ostack flavor list <span class="p">|</span> <span class="se">\</span>
+           grep <span class="s2">&quot;</span><span class="nv">$FLAVOR_NAME</span><span class="s2">&quot;</span>  <span class="p">|</span> cut -d<span class="s1">&#39;|&#39;</span> -f2 <span class="p">|</span> <span class="se">\</span>
+           sed -e <span class="s2">&quot;s/ //g&quot;</span><span class="k">)</span>
 
-onova boot --flavor $FLAVORID --image $IMAGEID --security-groups default \
-           --user-data ./user-data-jupystack.txt \
-           --key-name $KEYPAIR  $SERVER_NAME
-
-ostack server show $SERVER_NAME
+onova boot --flavor <span class="nv">$FLAVORID</span> --image <span class="nv">$IMAGEID</span> --security-groups default <span class="se">\</span>
+           --user-data ./user-data-jupystack.txt <span class="se">\</span>
+           --key-name <span class="nv">$KEYPAIR</span>  <span class="nv">$SERVER_NAME</span>
 </code></pre></div>
 
-<p>The last command is used to obtain the IP number of the VM thus created. Let's suppose that this IP number is <em>192.168.101.79</em>.  You can then access the application from your web browser at the URL: <em><a href="https://app-192-168-101-79.vm.openstack.genouest.org/hub/login">https://app-192-168-101-79.vm.openstack.genouest.org/hub/login</a></em></p>
+<p>Once launched, the construction of the VM instance is underway. </p>
+<div class="highlight"><pre><span></span><code>ostack server show <span class="nv">$SERVER_NAME</span>
+</code></pre></div>
+
+<p>The last command is used to obtain the IP number of the VM thus created. At launch, the status is "building". You have to wait until the VM status is "Running" (~ one minute or more). So you should rereun this last command</p>
+<p>Finally you should obtained something like below:</p>
+<div class="highlight"><pre><span></span><code>+-----------------------------+------------------------------------------------------------------+
+| Field                       | Value                                                            |
++-----------------------------+------------------------------------------------------------------+
+| OS-DCF:diskConfig           | MANUAL                                                           |
+| OS-EXT-AZ:availability_zone | nova                                                             |
+| OS-EXT-STS:power_state      | Running                                                          |
+| OS-EXT-STS:task_state       | None                                                             |
+| OS-EXT-STS:vm_state         | active                                                           |
+| OS-SRV-USG:launched_at      | 2021-09-09T07:09:49.000000                                       |
+| OS-SRV-USG:terminated_at    | None                                                             |
+| accessIPv4                  |                                                                  |
+| accessIPv6                  |                                                                  |
+| addresses                   | genouest-ext=192.168.101.79                                      |
+| config_drive                | True                                                             |
+| created                     | 2021-09-09T07:08:05Z                                             |
+| flavor                      | m1.xlarge (c781b97e-f891-4ddf-9a6b-0e5ae4ef3eb1)                 |
+| hostId                      | 126a5d6324eb3765547b4d2e3c5743509afde064a7d90ff1db2fb58a         |
+| id                          | 0146be96-0c4f-413b-b3a5-bde37cdabb26                             |
+| image                       | jupyterhub-image (d88e2d16-9c67-4f07-a5dd-20d68f80ba0f)          |
+| key_name                    | genostack                                                        |
+| name                        | jupystack                                                        |
+| progress                    | 0                                                                |
+| project_id                  | xxxxxxxxxxxxxxxxxxxxxxxxx                                        |
+| properties                  |                                                                  |
+| security_groups             | name=&#39;default&#39;                                                   |
+| status                      | ACTIVE                                                           |
+| updated                     | 2021-09-09T07:09:49Z                                             |
+| user_id                     | xxxxxxxxxxxxxxxxxxxxxxxxx                                        |
+| volumes_attached            |                                                                  |
++-----------------------------+------------------------------------------------------------------+
+</code></pre></div>
+
+<p><br></p>
+<p>The IP addresse is given by the field 'addresses'. Let's suppose that this IP number is <em>192.168.101.79</em>.  You can then access the application from your web browser at the URL: <em><a href="https://app-192-168-101-79.vm.openstack.genouest.org/hub/login">https://app-192-168-101-79.vm.openstack.genouest.org/hub/login</a></em></p>
 <p><br>
 <center>
 <a href="../images/image5.png" data-lightbox="image5"><img src="../images/image5.png" width="600px"></a>
