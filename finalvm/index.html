@@ -490,7 +490,7 @@
   with_items: &quot;{{repository.repos}}&quot;
 </code></pre></div>
 
-<p>Two tasks are thus defined and described by their name field. Then the actual task is defined using a name referring to a <a href="https://docs.ansible.com/ansible/latest/user_guide/modules_intro.html" target="_blank">module</a>. <a href="https://docs.ansible.com/ansible/2.8/modules/list_of_files_modules.html" target="_blank">Hundreds of modules</a> are available in Ansible. Here two modules are invoked:</p>
+<p>Two tasks are thus defined and described by their name field. Then the actual task is defined using a name referring to a <a href="https://docs.ansible.com/ansible/latest/user_guide/modules_intro.html" target="_blank">module</a>. <a href="https://docs.ansible.com/ansible/2.8/modules/list_of_all_modules.html" target="_blank">Hundreds of modules</a> are available in Ansible. Here two modules are invoked:</p>
 <ul>
 <li><a href="https://docs.ansible.com/ansible/2.8/modules/apt_key_module.html" target="_blank">apt_key</a>: add or remove an apt key</li>
 <li><a href="https://docs.ansible.com/ansible/2.8/modules/apt_repository_module.html" target="_blank">apt_repository</a>: add or remove a binary package repository. The <a href="https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html" target="_blank">variables</a>  defined by the double braces {{ }} correspond to those defined in the <em>vars/all.yml</em> file itself declared in the playbook. Thus the following lines can be found in this file:</li>
